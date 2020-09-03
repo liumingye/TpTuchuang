@@ -23,6 +23,7 @@ class TpTuchuang_Plugin implements Typecho_Plugin_Interface
     {
         // hook
         Typecho_Plugin::factory('admin/write-post.php')->bottom = array('TpTuchuang_Plugin', 'render');
+        Typecho_Plugin::factory('admin/write-page.php')->bottom = array('TpTuchuang_Plugin', 'render');
         // 添加路由
         Helper::addRoute("route_TpTuchuang", "/TpTuchuang", "TpTuchuang_Action", 'action');
     }
