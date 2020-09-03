@@ -1,0 +1,2 @@
+# TpTuchuang
+下载压缩包后解压将文件夹名更改为TpTuchuang，放到plugins下，启动插件即可使用
