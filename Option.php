@@ -1,5 +1,5 @@
 <?php
 class Option
 {
-    public $key = '123456';
+    public $key = '55defb24e38cf4981709bb6bf71e70e1';
 }

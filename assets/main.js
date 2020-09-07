@@ -1,89 +1,9 @@
 $(document).ready(function () {
-    $('body').append(`
-        <style>
-        .typecho-option-tabs .w-50{width: 33.33333333%;}
-        .dropzone{
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            min-height: 0;
-            border: none;
-            padding: 0;
-        }
-        .dz-details{
-            display: none;
-        }
-        .dropzone .dz-default{
-            display: none;
-        }
-        #tab-tuchuang{
-            margin: 1em 0;
-            border: 1px dashed #d9d9d6;
-        }
-        .dropzone .dz-preview{
-            padding: 0 8px;
-            margin: 0;
-            min-height: 0;
-        }
-        .dz-progress{
-        }
-        .tc-upload-btn{
-            padding: 15px;
-            background-color: #fff;
-            color: #467b96;
-            font-size: .92857em;
-            text-align: center;
-            cursor: pointer;
-        }
-        .tc-list {
-            width: 100%;
-            list-style: none;
-            margin: 0 10px;
-            padding: 0;
-            max-height: 450px;
-            overflow: auto;
-            word-break: break-all;
-        }
-        .tc-list li{
-            display: flex;
-            padding: 8px 0;
-            border-top: 1px dashed #d9d9d6;
-            align-items: center;
-            position: relative;
-        }
-        .tc-list .dz-image {
-            display: block;
-            max-width: 100%;
-            width: 100%!important;
-            padding: 0 4px;
-            height: auto!important;
-        }
-        .tc-list li img{
-            width: 32px;
-            height: 32px;
-            min-width: 32px;
-            min-height: 32px;
-        }
-        .tc-list li, .tc-list .dz-image{
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-        .tc-list a, .tc-list a i{
-            cursor: pointer!important;
-        }
-        </style>
-    `);
+    $('body').append('.dropzone{display:flex;flex-wrap:wrap;justify-content:center;min-height:0;border:none;padding:0}.dz-details{display:none}.dropzone .dz-default{display:none}#tab-tuchuang{margin:1em 0;border:1px dashed #d9d9d6}.dropzone .dz-preview{padding:0 8px;margin:0;min-height:0}.tc-upload-btn{padding:15px;background-color:#fff;color:#467b96;font-size:.92857em;text-align:center;cursor:pointer}.tc-list{width:100%;list-style:none;margin:0 10px;padding:0;max-height:450px;overflow:auto;word-break:break-all}.tc-list li{display:flex;padding:8px 0;border-top:1px dashed #d9d9d6;align-items:center;position:relative}.tc-list .dz-image{display:block;max-width:100%;width:100%!important;padding:0 4px;height:auto!important}.tc-list li img{width:32px;height:32px;min-width:32px;min-height:32px}.tc-list .dz-image,.tc-list li{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.tc-list a,.tc-list a i{cursor:pointer!important}');
 
     $('.typecho-option-tabs').append('<li class="w-50 tc-tab-btn"><a href="#tab-tuchuang">图床</a></li>');
 
-    $('#edit-secondary').append(`
-        <div id="tab-tuchuang" class="tab-content hidden">
-            <div class="tc-upload-btn">选择图片上传</div>
-            <div class="img-dropzone dropzone">
-            </div>
-        </div>
-    `);
+    $('#edit-secondary').append('<div id="tab-tuchuang" class="tab-content hidden"><div class="tc-upload-btn">选择图片上传</div><div class="img-dropzone dropzone"></div></div>');
 
     $('#edit-secondary .typecho-option-tabs .tc-tab-btn').click(function () {
         $('#edit-secondary .typecho-option-tabs li').removeClass('active');
@@ -104,18 +24,7 @@ $(document).ready(function () {
         addRemoveLinks: false,
         dictCancelUpload: '取消',
         dictRemoveFile: '删除',
-        previewTemplate: `
-            <div class="tc-list dz-preview">
-                <li>
-                    <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-                    <img data-dz-thumbnail />
-                    <a class="dz-image" href="#" title="点击插入图片" data-dz-name></a>
-                    <div class="info">
-                        <a class="delete" href="#" title="删除" data-dz-remove><i class="i-delete"></i></a>
-                    </div>
-                </li>
-            </div>
-        `,
+        previewTemplate: '<div class="tc-list dz-preview"><li><div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div><img data-dz-thumbnail /><a class="dz-image" href="#" title="点击插入图片" data-dz-name></a><div class="info"><a class="delete" href="#" title="删除" data-dz-remove><i class="i-delete"></i></a></div></li></div>',
         success: function (file, response) {
             response = JSON.parse(response);
             if (response.code == 1) {
