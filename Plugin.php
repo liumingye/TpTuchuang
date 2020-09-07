@@ -78,25 +78,4 @@ class TpTuchuang_Plugin implements Typecho_Plugin_Interface
     public static function personalConfig(Typecho_Widget_Helper_Form $form)
     {}
 
-    /**
-     * 过滤more标记
-     *
-     * @access public
-     * @return string
-     */
-    /*public static function filter_content($content, Widget_Archive $archive)
-{
-// 首页和分类、归档页
-if ($archive->is('index') || $archive->is('archive')) {
-if (strpos($content, '<div class="ke-more-excerpt"></div>')) {
-// 如果含有摘要标签
-$archive->text = str_replace('<div class="ke-more-excerpt"></div>', '<!--more-->', $content);
-$plugin_options = Typecho_Widget::widget('Widget_Options')->plugin('KEditor');
-return $archive->excerpt . "<p class=\"more\"><a href=\"{$archive->permalink}\" title=\"{$archive->title}\">{$plugin_options->moreTitle}</a></p>";
-}
-return $content;
-}
-return str_replace(array('<!--more-->', '<div class="ke-more-excerpt"></div>'), '', $content);
-}*/
-
 }
