@@ -44,7 +44,6 @@ class TpTuchuang_Action extends Widget_Abstract_Contents implements Widget_Inter
 
     public function upload($file)
     {
-        $this->msg(['code' => 1, 'msg' => '移动文件失败']);
         try {
             if (is_uploaded_file($file['tmp_name'])) {
                 $ext = $this->getSafeName($file['name']);
