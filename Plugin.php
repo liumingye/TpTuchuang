@@ -52,9 +52,9 @@ class TpTuchuang_Plugin implements Typecho_Plugin_Interface
         $path = Typecho_Common::url('TpTuchuang', $options->pluginUrl);
         echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dropzone@5.7.1/dist/dropzone.min.css">' .
             '<script src="https://cdn.jsdelivr.net/npm/dropzone@5.7.1/dist/dropzone.min.js"></script>' .
-            '<script>var TpTuchuang = ';
+            '<script>var TpTuchuang = "';
         $options->index('/TpTuchuang?action=upload');
-        echo ';</script>' .
+        echo '";</script>' .
             '<script src="' . $path . '/assets/main.js?v=1.2"></script>';
     }
 
