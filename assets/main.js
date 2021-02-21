@@ -18,7 +18,7 @@ $(document).ready(function () {
 
     Dropzone.autoDiscover = false;
     var dropzone = new Dropzone('.img-dropzone', {
-        url: TpTuchuang,
+        url: window.TpTuchuang,
         type: 'POST',
         acceptedFiles: "image/jpg,image/jpeg,image/png,image/gif",
         addRemoveLinks: false,
@@ -28,6 +28,7 @@ $(document).ready(function () {
         success: function (file, response) {
             response = JSON.parse(response);
             if (response.code == 1) {
+                alert(response.msg);
                 this.removeFile(file);
             } else {
                 $('.tc-list').unbind('click').on('click', '.dz-image', function (e) {
@@ -57,7 +58,7 @@ $(document).ready(function () {
             "insert": function (value) {
                 //默认参数
                 value = $.extend({
-                    "text": "123"
+                    "text": ""
                 }, value);
                 var dthis = $(this)[0]; //将jQuery对象转换为DOM元素
                 //IE下
