@@ -1,14 +1,13 @@
 <?php
+
 /**
  * 图床
  *
  * @package TpTuchuang
  * @author 刘明野
- * @version 1.0.1
+ * @version 1.0.0
  * @link https://www.liumingye.cn
  */
-
-include_once 'Option.php';
 
 class TpTuchuang_Plugin implements Typecho_Plugin_Interface
 {
@@ -37,7 +36,9 @@ class TpTuchuang_Plugin implements Typecho_Plugin_Interface
      * @throws Typecho_Plugin_Exception
      */
     public static function deactivate()
-    {}
+    {
+        Helper::removeRoute('route_TpTuchuang');
+    }
 
     /**
      * 插件实现方法
@@ -49,13 +50,12 @@ class TpTuchuang_Plugin implements Typecho_Plugin_Interface
     {
         $options = Helper::options();
         $path = Typecho_Common::url('TpTuchuang', $options->pluginUrl);
-        $option = new Option;
-        ?>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dropzone@5.7.1/dist/dropzone.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/dropzone@5.7.1/dist/dropzone.min.js"></script>
-        <script>var TpTuchuang = '<?php $options->index('/TpTuchuang?action=upload&key=' . md5($option->key));?>'</script>
-        <script src="<?php echo $path; ?>/assets/main.js"></script>
-        <?php
+        echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dropzone@5.7.1/dist/dropzone.min.css">' .
+            '<script src="https://cdn.jsdelivr.net/npm/dropzone@5.7.1/dist/dropzone.min.js"></script>' .
+            '<script>var TpTuchuang = ';
+        $options->index('/TpTuchuang?action=upload');
+        echo ';</script>' .
+            '<script src="' . $path . '/assets/main.js?v=1.2"></script>';
     }
 
     /**
@@ -66,7 +66,8 @@ class TpTuchuang_Plugin implements Typecho_Plugin_Interface
      * @return void
      */
     public static function config(Typecho_Widget_Helper_Form $form)
-    {}
+    {
+    }
 
     /**
      * 个人用户的配置面板
@@ -76,6 +77,6 @@ class TpTuchuang_Plugin implements Typecho_Plugin_Interface
      * @return void
      */
     public static function personalConfig(Typecho_Widget_Helper_Form $form)
-    {}
-
+    {
+    }
 }
