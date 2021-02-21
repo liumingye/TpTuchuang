@@ -5,7 +5,7 @@
  *
  * @package TpTuchuang
  * @author 刘明野
- * @version 1.0.0
+ * @version 1.0.2
  * @link https://www.liumingye.cn
  */
 
