@@ -3,6 +3,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
 
+error_reporting(E_ALL);
+
 class TpTuchuang_Action extends Widget_Abstract_Contents implements Widget_Interface_Do
 {
     //上传文件目录
@@ -115,16 +117,16 @@ class TpTuchuang_Action extends Widget_Abstract_Contents implements Widget_Inter
 
                 //获取文件名
                 $fileName = sprintf('%u', crc32(uniqid())) . '.' . $ext;
-                $path = $path . '/' . $fileName;
+                $fullpath = $path . '/' . $fileName;
 
                 if (isset($file['tmp_name'])) {
                     //移动上传文件
-                    if (!@move_uploaded_file($file['tmp_name'], $path)) {
+                    if (!@move_uploaded_file($file['tmp_name'], $fullpath)) {
                         $this->msg(['code' => 1, 'msg' => '移动上传文件失败']);
                     }
                 } else if (isset($file['bytes'])) {
                     //直接写入文件
-                    if (!file_put_contents($path, $file['bytes'])) {
+                    if (!file_put_contents($fullpath, $file['bytes'])) {
                         $this->msg(['code' => 1, 'msg' => '直接写入文件失败']);
                     }
                 } else {
@@ -133,14 +135,14 @@ class TpTuchuang_Action extends Widget_Abstract_Contents implements Widget_Inter
                 }
 
                 // 开始上传
-                $data = $this->uploadAlibaba($path);
+                $data = $this->uploadAlibaba($fullpath);
+                // $data = $this->uploadSina($fullpath);
 
                 // 删除文件
-                @unlink($path);
+                @unlink($fullpath);
 
-                $data = json_decode($data);
-                if (isset($data->url)) {
-                    $this->msg(['code' => 0, 'msg' => $data->url]);
+                if (isset($data['url'])) {
+                    $this->msg(['code' => 0, 'msg' => $data['url']]);
                 } else {
                     $this->msg(['code' => 1, 'msg' => '上传失败']);
                 }
@@ -158,32 +160,84 @@ class TpTuchuang_Action extends Widget_Abstract_Contents implements Widget_Inter
      * @param array $file 上传的文件
      * @return mixed
      */
-    public function uploadAlibaba($file)
+    public function uploadAlibaba($path)
     {
         $post = [
             'scene' => 'aeMessageCenterImageRule',
-            'name' => 'player.jpg'
+            'name' => 'player.jpg',
+            'file' =>  '@' . realpath($path) // 兼容php5.4
         ];
         if (class_exists('CURLFile')) {
-            $post['file'] = new \CURLFile(realpath($file));
-        } else {
-            $post['file'] = '@' . realpath($file);
+            $post['file'] = new \CURLFile(realpath($path));
         }
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_URL, 'https://kfupload.alibaba.com/mupload');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        $ip = $this->GetRandIp();
+        $httpheader[] = 'X-Real-IP:' . $ip;
+        $httpheader[] = 'X-Forwarded-For:' . $ip;
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $httpheader);
         curl_setopt($ch, CURLOPT_USERAGENT, 'iAliexpress/6.22.1 (iPhone; iOS 12.1.2; Scale/2.00)');
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        curl_setopt($ch, CURLOPT_ENCODING, "gzip");
         if (curl_exec($ch) === false) {
             echo 'Curl error: ' . curl_error($ch);
         }
         $result = curl_exec($ch);
         curl_close($ch);
+        $result = json_decode($result, true);
         return $result;
+    }
+
+    // 新浪图床
+    public function uploadSina($file)
+    {
+        $url = 'https://iask.sina.com.cn/question/ajax/fileupload';
+        $data = ['wenwoImage' => new \CURLFile($file)];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        $ip = $this->GetRandIp();
+        $httpheader[] = 'CLIENT-IP:' . $ip;
+        $httpheader[] = 'X-FORWARDED-FOR:' . $ip;
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $httpheader);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_REFERER, "https://iask.sina.com.cn/ask.html?q=");
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36');
+        curl_setopt($ch, CURLOPT_ENCODING, "gzip");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $html = curl_exec($ch);
+        curl_close($ch);
+        $json = json_decode($html, true);
+        if (isset($json['id'])) {
+            return ['url' => "https://pic.iask.cn/fimg/{$json['id']}.jpg"];
+        }
+        return false;
+    }
+
+    public function GetRandIp()
+    {
+        $ip_long = array(
+            array('607649792', '608174079'), // 36.56.0.0-36.63.255.255
+            array('1038614528', '1039007743'), // 61.232.0.0-61.237.255.255
+            array('1783627776', '1784676351'), // 106.80.0.0-106.95.255.255
+            array('2035023872', '2035154943'), // 121.76.0.0-121.77.255.255
+            array('2078801920', '2079064063'), // 123.232.0.0-123.235.255.255
+            array('-1950089216', '-1948778497'), // 139.196.0.0-139.215.255.255
+            array('-1425539072', '-1425014785'), // 171.8.0.0-171.15.255.255
+            array('-1236271104', '-1235419137'), // 182.80.0.0-182.92.255.255
+            array('-770113536', '-768606209'), // 210.25.0.0-210.47.255.255
+            array('-569376768', '-564133889'), // 222.16.0.0-222.95.255.255
+        );
+        $rand_key = mt_rand(0, 9);
+        return long2ip(mt_rand($ip_long[$rand_key][0], $ip_long[$rand_key][1]));
     }
 
     public function msg($data)
