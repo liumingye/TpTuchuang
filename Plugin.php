@@ -5,7 +5,7 @@
  *
  * @package TpTuchuang
  * @author 刘明野
- * @version 1.0.2
+ * @version 1.0.3
  * @link https://www.liumingye.cn
  */
 
@@ -55,7 +55,7 @@ class TpTuchuang_Plugin implements Typecho_Plugin_Interface
             '<script>var TpTuchuang = "';
         $options->index('/TpTuchuang?action=upload');
         echo '";</script>' .
-            '<script src="' . $path . '/assets/main.js?v=1.2"></script>';
+            '<script src="' . $path . '/assets/main.js?v=1.0.3"></script>';
     }
 
     /**
