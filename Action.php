@@ -162,9 +162,13 @@ class TpTuchuang_Action extends Widget_Abstract_Contents implements Widget_Inter
     {
         $post = [
             'scene' => 'aeMessageCenterImageRule',
-            'name' => $file,
-            'file' => new \CURLFile(realpath($file)),
+            'name' => 'player.jpg'
         ];
+        if (class_exists('CURLFile')) {
+            $post['file'] = new \CURLFile(realpath($file));
+        } else {
+            $post['file'] = '@' . realpath($file);
+        }
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_URL, 'https://kfupload.alibaba.com/mupload');
