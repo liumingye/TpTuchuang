@@ -3,7 +3,8 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
 
-error_reporting(E_ALL);
+// error_reporting(E_ALL);
+error_reporting(0);
 
 class TpTuchuang_Action extends Widget_Abstract_Contents implements Widget_Interface_Do
 {
@@ -116,7 +117,7 @@ class TpTuchuang_Action extends Widget_Abstract_Contents implements Widget_Inter
                 }
 
                 //获取文件名
-                $fileName = sprintf('%u', crc32(uniqid())) . '.' . $ext;
+                $fileName = sprintf('%u', crc32(uniqid() . rand(1000, 9999))) . rand(1000, 9999) . rand(1000, 9999) . '.' . $ext;
                 $fullpath = $path . '/' . $fileName;
 
                 if (isset($file['tmp_name'])) {
@@ -135,8 +136,13 @@ class TpTuchuang_Action extends Widget_Abstract_Contents implements Widget_Inter
                 }
 
                 // 开始上传
-                $data = $this->uploadAlibaba($fullpath);
-                // $data = $this->uploadSina($fullpath);
+                try {
+                    $data = $this->uploadAlibaba($fullpath);
+                    // $data = $this->uploadSina($fullpath);
+                } catch (\Throwable $th) {
+                    // 删除文件
+                    @unlink($fullpath);
+                }
 
                 // 删除文件
                 @unlink($fullpath);
