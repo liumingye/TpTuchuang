@@ -179,7 +179,7 @@ class TpTuchuang_Action extends Widget_Abstract_Contents implements Widget_Inter
         $httpheader[] = 'X-Real-IP:' . $ip;
         $httpheader[] = 'X-Forwarded-For:' . $ip;
         curl_setopt($ch, CURLOPT_HTTPHEADER, $httpheader);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'iAliexpress/6.22.1 (iPhone; iOS 12.1.2; Scale/2.00)');
+        curl_setopt($ch, CURLOPT_USERAGENT, 'iAliexpress/6.22.2 (iPhone; iOS 12.1.3; Scale/2.00)');
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
         curl_setopt($ch, CURLOPT_ENCODING, "gzip");
